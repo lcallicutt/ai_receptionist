@@ -39,11 +39,20 @@ tenant resolution by called number, webhook event logging) and an in-app
 call simulator on the Test Receptionist page. Admin platform-wide call and
 lead lists.
 
-## Phase 4 — Calendar Booking
+## ✅ Phase 4 — Calendar Booking (complete)
 
-`CalendarProvider` interface, Google Calendar implementation, availability
-lookup, appointment booking with buffers/notice rules, confirmations,
-appointment dashboard.
+`CalendarProvider` interface with two implementations: built-in scheduling
+(busy time from the tenant's own appointments — always on) and Google
+Calendar (OAuth connect flow, encrypted token storage with AES-256-GCM,
+freeBusy lookup, event create/delete, automatic token refresh). Busy
+intervals are merged across all connected sources so double-booking is
+impossible. Timezone-aware availability engine honoring business hours,
+durations, buffers, and minimum booking notice. Conflict-safe booking
+action (re-validates the slot at write time), confirmation messages
+rendered from appointment-type templates and queued for delivery (live
+send arrives with SMS/email providers), appointment dashboard with status
+filters and lifecycle transitions (confirm / complete / no-show / cancel,
+with external event cleanup), and the Calendar Connections page.
 
 ## Phase 5 — Voice & Telephony
 
@@ -76,8 +85,8 @@ test coverage, deployment documentation.
 
 ## Next recommended task
 
-**Phase 4 — Calendar Booking**: the `CalendarProvider` interface with a
-Google Calendar implementation, availability lookup honoring appointment
-types (durations, buffers, notice), booking with conflict handling,
-confirmation messages, and the appointment dashboard. Appointment types are
-already configurable from Phase 2.
+**Phase 5 — Voice & Telephony**: `VoiceProvider`/`TelephonyProvider`
+adapters (Retell + Twilio first), phone-number mapping, real provider
+webhook routes following the sample-webhook contract from Phase 3, call
+status events, transcript/recording ingestion, and the live test-call
+experience.
