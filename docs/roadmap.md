@@ -11,12 +11,17 @@ industries, pricing, demo, contact, book-a-demo, legal placeholders, login),
 client + admin portal shells with navigation, realistic seed data for five
 demo verticals, unit + tenant-isolation tests.
 
-## Phase 2 — Client Configuration
+## ✅ Phase 2 — Client Configuration (complete)
 
-Business profile editing, 10-step onboarding wizard, receptionist settings
-with version history (draft/preview/publish/rollback), FAQ management,
-qualification question builder, business hours, notification settings, team
-management.
+Business profile + business hours editing, 10-step onboarding wizard with
+activation readiness score, receptionist settings with version history
+(draft/publish/rollback) and pause/activate, FAQ management (add, edit,
+reorder, activate/deactivate, escalation flags), qualification question
+builder (13 answer types, scoring, disqualifiers, CRM save flags),
+appointment type configuration, transfer + escalation rules, notification
+recipients with server-enforced plan limits, and team management (invite,
+role changes, remove — with last-owner protection). All mutations are
+Zod-validated server actions behind role guards, with audit log entries.
 
 ## Phase 3 — Lead & Call Management
 
@@ -61,7 +66,7 @@ test coverage, deployment documentation.
 
 ## Next recommended task
 
-**Phase 2, starting with the onboarding wizard** — the schema
-(`onboarding_progress`, `business_profiles`, `faqs`, `qualification_*`,
-`industry_templates`) and portal shell are already in place; the wizard turns
-them into the core client experience.
+**Phase 3 — Lead & Call Management**: the call inbox and call detail pages
+(transcripts, summaries, event timelines are already seeded), the lead
+pipeline with statuses/notes/tags/assignment, and configurable lead scoring.
+The schema and seed data for all of it are in place.
