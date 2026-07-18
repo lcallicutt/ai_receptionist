@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+/* ── FlowNet brand tokens ─────────────────────────────────────────────
+   Professional, calm, reliable. Deep teal primary with warm neutrals —
+   premium but approachable, no gradients-everywhere. */
+@theme {
+  --color-brand-50: #f0fbfa;
+  --color-brand-100: #d3f4f1;
+  --color-brand-200: #a8e8e4;
+  --color-brand-300: #74d5d1;
+  --color-brand-400: #43bab8;
+  --color-brand-500: #299e9e;
+  --color-brand-600: #1e7f82;
+  --color-brand-700: #1c6568;
+  --color-brand-800: #1b5154;
+  --color-brand-900: #1a4446;
+  --color-brand-950: #09262a;
+
+  --color-accent-400: #f5b453;
+  --color-accent-500: #eda23a;
+  --color-accent-600: #d98420;
+
+  --color-surface: #ffffff;
+  --color-surface-muted: #f7f8f8;
+  --color-ink-900: #102223;
+  --color-ink-700: #2d4345;
+  --color-ink-500: #55696b;
+  --color-ink-300: #9aabac;
+
+  --font-sans: var(--font-geist, ui-sans-serif, system-ui, sans-serif);
+
+  --radius-card: 0.75rem;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-surface text-ink-900 antialiased;
+}
+
+/* Accessible focus states everywhere */
+:focus-visible {
+  outline: 2px solid var(--color-brand-600);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
