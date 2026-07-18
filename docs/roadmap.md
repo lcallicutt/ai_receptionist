@@ -23,11 +23,21 @@ recipients with server-enforced plan limits, and team management (invite,
 role changes, remove — with last-owner protection). All mutations are
 Zod-validated server actions behind role guards, with audit log entries.
 
-## Phase 3 — Lead & Call Management
+## ✅ Phase 3 — Lead & Call Management (complete)
 
-Call inbox + call detail (transcript, summary, events timeline), lead pipeline
-with statuses/notes/tags/assignment, configurable lead scoring, call summary
-generation, sample provider event ingestion.
+Call inbox with outcome filters and unread tracking; call detail with
+transcript, structured summary, extracted lead details, qualification
+answers, appointment info, system-event timeline, provider IDs, related SMS,
+assignment, and notes. Lead pipeline with status filters and search; lead
+detail with status/classification/assignment/follow-up/tags/notes and
+related calls, appointments, and texts. Configurable lead scoring rules
+(signal → points, hot/warm/cold thresholds) applied by the ingestion
+pipeline on top of per-question score impacts. Provider-neutral call-event
+ingestion powering both a signed sample webhook
+(`POST /api/webhooks/sample` — HMAC verification, idempotency-key dedupe,
+tenant resolution by called number, webhook event logging) and an in-app
+call simulator on the Test Receptionist page. Admin platform-wide call and
+lead lists.
 
 ## Phase 4 — Calendar Booking
 
@@ -66,7 +76,8 @@ test coverage, deployment documentation.
 
 ## Next recommended task
 
-**Phase 3 — Lead & Call Management**: the call inbox and call detail pages
-(transcripts, summaries, event timelines are already seeded), the lead
-pipeline with statuses/notes/tags/assignment, and configurable lead scoring.
-The schema and seed data for all of it are in place.
+**Phase 4 — Calendar Booking**: the `CalendarProvider` interface with a
+Google Calendar implementation, availability lookup honoring appointment
+types (durations, buffers, notice), booking with conflict handling,
+confirmation messages, and the appointment dashboard. Appointment types are
+already configurable from Phase 2.
