@@ -54,12 +54,21 @@ send arrives with SMS/email providers), appointment dashboard with status
 filters and lifecycle transitions (confirm / complete / no-show / cancel,
 with external event cleanup), and the Calendar Connections page.
 
-## Phase 5 — Voice & Telephony
+## ✅ Phase 5 — Voice & Telephony (complete)
 
-`VoiceProvider`/`TelephonyProvider` adapters (Retell + Twilio first),
-phone-number mapping, incoming call webhooks with signature verification and
-idempotency, call status events, transcript/recording ingestion, test-call
-experience.
+`VoiceProvider` (Retell) and `TelephonyProvider` (Twilio) adapters via REST
+with no vendor SDKs; the Retell adapter compiles the receptionist config
+into a guarded prompt (approved FAQs only, compliance statements, explicit
+no-invention rules). Provider webhook routes following the platform
+contract: Retell call_ended/call_analyzed (HMAC-SHA256, transcript +
+recording + sentiment mapping into the ingestion pipeline) and Twilio voice
+status callbacks (X-Twilio-Signature validation; terminal missed states
+feed Phase 7 text-back). Ingestion now stores recording references and
+voice-minute usage records. Phone Numbers page with manual mapping or
+Twilio provisioning, plan-limit enforcement, and activate/deactivate. Live
+test-call flow (agent sync + outbound dial) with honest not-configured
+states. Admin Provider Health (deployment config, tenant connections,
+integration activity) and Webhook Logs pages.
 
 ## Phase 6 — CRM & Automation
 
@@ -85,8 +94,6 @@ test coverage, deployment documentation.
 
 ## Next recommended task
 
-**Phase 5 — Voice & Telephony**: `VoiceProvider`/`TelephonyProvider`
-adapters (Retell + Twilio first), phone-number mapping, real provider
-webhook routes following the sample-webhook contract from Phase 3, call
-status events, transcript/recording ingestion, and the live test-call
-experience.
+**Phase 6 — CRM & Automation**: `CRMProvider` interface with GoHighLevel
+and generic-webhook implementations, n8n integration, retry management for
+failed syncs, and the admin failed-workflows tooling with manual retry.

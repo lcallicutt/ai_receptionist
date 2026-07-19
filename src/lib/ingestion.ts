@@ -41,6 +41,14 @@ export const callEventSchema = z.object({
     .default([]),
   matchedScoringSignals: z.array(z.string().max(100)).max(50).default([]),
   disqualified: z.boolean().default(false),
+  recording: z
+    .object({
+      providerRecordingId: z.string().max(128).nullish(),
+      /** Provider-hosted reference; playback is brokered server-side. */
+      storageRef: z.string().max(1000),
+      durationSeconds: z.number().int().min(0).nullish(),
+    })
+    .nullish(),
 });
 
 export type CallEvent = z.infer<typeof callEventSchema>;
@@ -193,6 +201,33 @@ export async function ingestCallEvent(organizationId: string, event: CallEvent):
       detailedSummary: event.summary ?? null,
       reasonForCalling: event.reasonForCalling ?? null,
       sentiment: event.sentiment ?? null,
+    });
+  }
+
+  if (event.recording) {
+    await db.insert(schema.callRecordings).values({
+      id: newId("rec"),
+      organizationId,
+      callRecordId,
+      provider: event.provider,
+      providerRecordingId: event.recording.providerRecordingId ?? null,
+      storageRef: event.recording.storageRef,
+      durationSeconds: event.recording.durationSeconds ?? event.durationSeconds,
+    });
+  }
+
+  // Billable usage: voice minutes per answered call
+  if (event.durationSeconds > 0) {
+    const periodStart = new Date(event.startedAt);
+    periodStart.setUTCDate(1);
+    periodStart.setUTCHours(0, 0, 0, 0);
+    await db.insert(schema.usageRecords).values({
+      id: newId("ur"),
+      organizationId,
+      usageType: "voice_minutes",
+      quantity: String(Math.ceil(event.durationSeconds / 60)),
+      callRecordId,
+      periodStart,
     });
   }
 

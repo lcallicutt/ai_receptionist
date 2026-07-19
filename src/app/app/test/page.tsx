@@ -1,6 +1,8 @@
 import { requireOrgContext } from "@/lib/auth/guards";
+import { retellProvider } from "@/lib/providers/voice/retell";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { SimulateCallPanel } from "@/components/features/simulate-call-panel";
+import { LiveTestCallPanel } from "@/components/features/live-test-call-panel";
 
 export const metadata = { title: "Test Receptionist" };
 
@@ -22,10 +24,23 @@ export default async function TestReceptionistPage() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-ink-900">Test Receptionist</h1>
         <p className="text-sm text-ink-500">
-          Exercise the full call pipeline with simulated calls. Live phone test calls arrive with
-          the voice integration in Phase 5.
+          Place a live test call to your own phone, or exercise the pipeline with simulated calls.
         </p>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Live test call</CardTitle>
+          <CardDescription>
+            Syncs your receptionist&apos;s configuration to the voice provider and calls your
+            phone from your business line. The completed call, transcript, and summary flow into
+            the call inbox through the provider webhook.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <LiveTestCallPanel voiceConfigured={retellProvider.isConfigured()} />
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
