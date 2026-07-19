@@ -4,6 +4,7 @@ import { requireOrgContext } from "@/lib/auth/guards";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { BusinessProfileForm } from "@/components/features/business-profile-form";
 import { BusinessHoursForm } from "@/components/features/business-hours-form";
+import { TextBackSettingsForm } from "@/components/features/text-back-settings-form";
 
 export const metadata = { title: "Settings" };
 
@@ -50,6 +51,22 @@ export default async function SettingsPage() {
         </CardHeader>
         <CardContent>
           <BusinessHoursForm hours={hours} />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Missed-call text-back</CardTitle>
+          <CardDescription>
+            When a call can&apos;t be answered, an instant text keeps the lead alive. Opt-outs
+            (STOP) are honored automatically and duplicates are prevented by the cooldown.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <TextBackSettingsForm
+            enabled={profiles[0]?.textBackEnabled ?? true}
+            message={profiles[0]?.textBackMessage ?? null}
+            cooldownHours={profiles[0]?.textBackCooldownHours ?? 24}
+          />
         </CardContent>
       </Card>
     </div>

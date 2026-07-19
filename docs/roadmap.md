@@ -84,10 +84,18 @@ platform-admin retry on the real Failed Workflows page (failed syncs,
 failed webhook events, failed integration operations). CRM Connections
 page with connect/disconnect and live sync counts.
 
-## Phase 7 — Missed-Call Text-Back
+## ✅ Phase 7 — Missed-Call Text-Back (complete)
 
-Missed-call detection, `SMSProvider` sends within compliance rules, STOP/opt-out
-handling, cooldown protection, two-way conversation tracking into leads.
+Text-back sender wired into missed/abandoned call ingestion with layered
+protections checked in order: tenant toggle, caller opt-out, number SMS
+capability, and per-caller cooldown (the cooldown clock starts at commit
+time so races can never double-text). Messages queue honestly when the SMS
+provider isn't configured and send through Twilio when it is, with failure
+recording. Inbound Twilio SMS webhook (signature-verified, idempotent):
+STOP/UNSUBSCRIBE opt-outs and START opt-ins recorded with consent entries;
+real replies create or refresh a lead as follow_up_required. Configurable
+template + cooldown on the Settings page; SMS Activity page shows the full
+conversation stream with delivery status and opt-out badges.
 
 ## Phase 8 — Analytics & Usage
 
@@ -102,7 +110,6 @@ test coverage, deployment documentation.
 
 ## Next recommended task
 
-**Phase 7 — Missed-Call Text-Back**: missed-call detection is already
-ingesting (Twilio status webhook); build the text-back sender through the
-`SMSProvider`, STOP/opt-out handling on the inbound SMS webhook, cooldown
-protection, and two-way conversation tracking into leads.
+**Phase 8 — Analytics & Usage**: dashboard metrics and charts, usage
+tracking against plan allowances (voice-minute records are already being
+written by ingestion), and admin monitoring.

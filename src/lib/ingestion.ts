@@ -247,6 +247,16 @@ export async function ingestCallEvent(organizationId: string, event: CallEvent):
     });
   }
 
+  // Missed-call text-back — layered protections live in maybeSendTextBack.
+  if (event.status === "missed" || event.status === "abandoned") {
+    try {
+      const { maybeSendTextBack } = await import("@/lib/text-back");
+      await maybeSendTextBack(organizationId, callerId, callRecordId);
+    } catch (err) {
+      console.error("text-back during ingestion failed", err);
+    }
+  }
+
   // Downstream integrations — best-effort, never fatal to ingestion.
   if (leadId) {
     try {
