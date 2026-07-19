@@ -342,6 +342,10 @@ export const businessProfiles = pgTable(
     primaryContactName: text("primary_contact_name"),
     primaryContactEmail: text("primary_contact_email"),
     notificationPhone: text("notification_phone"),
+    // Missed-call text-back configuration
+    textBackEnabled: boolean("text_back_enabled").notNull().default(true),
+    textBackMessage: text("text_back_message"),
+    textBackCooldownHours: integer("text_back_cooldown_hours").notNull().default(24),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },

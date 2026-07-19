@@ -829,6 +829,36 @@ async function seedDemoOrg(db: Db, spec: DemoOrgSpec, planId: string, now: Date)
     });
   }
 
+  // Appointment types
+  const defaultTypes: Record<string, Array<{ name: string; duration: number; buffer: number }>> = {
+    realtor: [
+      { name: "Property showing", duration: 45, buffer: 15 },
+      { name: "Buyer consultation", duration: 60, buffer: 0 },
+    ],
+    home_services: [
+      { name: "Service call", duration: 90, buffer: 30 },
+      { name: "Free estimate", duration: 60, buffer: 15 },
+    ],
+    med_spa: [
+      { name: "New client consultation", duration: 30, buffer: 10 },
+      { name: "Treatment", duration: 60, buffer: 15 },
+    ],
+    law_office: [{ name: "New client consultation", duration: 60, buffer: 15 }],
+    church: [{ name: "Pastoral meeting", duration: 45, buffer: 15 }],
+  };
+  for (const t of defaultTypes[spec.industry] ?? []) {
+    await db.insert(schema.appointmentTypes).values({
+      id: newId("at"),
+      organizationId: orgId,
+      name: t.name,
+      durationMinutes: t.duration,
+      bufferMinutes: t.buffer,
+      minNoticeHours: 2,
+      confirmationMessage:
+        "Hi {{caller_name}}! Your {{appointment_type}} with {{business_name}} is confirmed for {{time}}. Reply C to cancel.",
+    });
+  }
+
   // Notification settings
   await db.insert(schema.notificationSettings).values({
     id: newId("ns"),

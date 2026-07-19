@@ -214,3 +214,55 @@ export function planLimitReached(
 export function formatPrice(cents: number): string {
   return `$${(cents / 100).toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
 }
+
+/* ── Usage & overage configuration ──────────────────────────────────── */
+
+export type UsageType =
+  | "voice_minutes"
+  | "phone_numbers"
+  | "sms_messages"
+  | "ai_processing"
+  | "call_recordings"
+  | "transcription_minutes"
+  | "calendar_bookings"
+  | "crm_sync_operations"
+  | "premium_workflow_executions";
+
+/** Per-unit overage rates in cents — configuration, not hard-coded UI. */
+export const OVERAGE_RATES_CENTS: Partial<Record<UsageType, number>> = {
+  voice_minutes: 15,
+  sms_messages: 2,
+  transcription_minutes: 5,
+};
+
+/** Which plan limit backs each metered usage type (null = no allowance). */
+export const USAGE_ALLOWANCE_KEYS: Partial<Record<UsageType, LimitKey>> = {
+  voice_minutes: "included_voice_minutes",
+  sms_messages: "included_sms_messages",
+};
+
+export const USAGE_LABELS: Record<UsageType, { label: string; unit: string }> = {
+  voice_minutes: { label: "Voice minutes", unit: "min" },
+  phone_numbers: { label: "Phone numbers", unit: "numbers" },
+  sms_messages: { label: "SMS messages", unit: "messages" },
+  ai_processing: { label: "AI processing", unit: "ops" },
+  call_recordings: { label: "Call recordings", unit: "recordings" },
+  transcription_minutes: { label: "Transcription", unit: "min" },
+  calendar_bookings: { label: "Calendar bookings", unit: "bookings" },
+  crm_sync_operations: { label: "CRM syncs", unit: "ops" },
+  premium_workflow_executions: { label: "Premium workflows", unit: "runs" },
+};
+
+/** Overage estimate in cents for one usage type. */
+export function estimateOverageCents(
+  tier: PlanTier,
+  usageType: UsageType,
+  used: number,
+): number {
+  const allowanceKey = USAGE_ALLOWANCE_KEYS[usageType];
+  const rate = OVERAGE_RATES_CENTS[usageType];
+  if (!allowanceKey || !rate) return 0;
+  const allowance = planLimit(tier, allowanceKey);
+  if (allowance === null) return 0;
+  return Math.max(0, used - allowance) * rate;
+}
