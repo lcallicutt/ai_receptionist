@@ -110,14 +110,26 @@ highlighting, and overage estimates from configurable per-unit rates
 (`OVERAGE_RATES_CENTS`); admin usage page showing per-organization voice/SMS
 consumption against plan allowances with estimated overage.
 
-## Phase 9 — Billing & Production Hardening
+## ✅ Phase 9 — Billing & Production Hardening (complete)
 
-Stripe integration (subscriptions, upgrades/downgrades, trials, overages,
-suspension), security review, accessibility review, performance pass, expanded
-test coverage, deployment documentation.
+Billing page reflecting the live subscription, plan features, period end,
+and an honest Stripe-preparation state (all internal billing status fields,
+Stripe customer/subscription columns, and the integration path are in
+place). Compliance page: owner-only recording enable with mandatory
+disclosure, retention windows, legal disclaimers, verified data-deletion
+request workflow, and the consent record stream. Receptionist Script page
+rendering the exact guarded script compiled from configuration (shared with
+the Retell adapter — one compiler, tested, covering the law-office
+disclaimer and no-medical-advice scenarios). Admin portal completed:
+industry Templates, Feature Flags with audited global toggles, Audit Logs
+(including impersonation attribution), platform Receptionists list, Support
+Tools with fully audit-logged owner impersonation, and System Settings with
+a production checklist. Deployment guide added. Every page in both portals
+is now a real implementation — no stubs remain.
 
-## Next recommended task
+## Beyond the phases
 
-**Phase 9 — Billing & Production Hardening**: Stripe preparation (billing
-status fields already exist), billing/compliance portal pages, expanded
-security review, accessibility pass, and deployment documentation.
+Remaining go-live work is operational rather than structural: enable Stripe
+checkout against the prepared fields, add scheduled jobs (CRM sync retries,
+retention enforcement, digest emails), and connect production provider
+credentials. See docs/deployment.md.

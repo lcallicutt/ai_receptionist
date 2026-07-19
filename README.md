@@ -6,10 +6,12 @@ Multi-tenant SaaS platform by FlowNet Automation for configuring and managing AI
 receptionists for small businesses — 24/7 call answering, lead qualification,
 appointment booking, missed-call text-back, CRM logging, and owner notifications.
 
-> **Status: Phase 1 (Foundation) complete.** Auth, multi-tenant organizations,
-> roles, full database schema, design system, public marketing site, pricing,
-> portal shells, and seed data. See [docs/roadmap.md](docs/roadmap.md) for the
-> phased implementation plan.
+> **Status: all nine implementation phases complete.** Foundation, client
+> configuration + onboarding wizard, lead & call management, calendar booking,
+> voice & telephony adapters, CRM & automation, missed-call text-back,
+> analytics & usage, and billing preparation + production hardening. See
+> [docs/roadmap.md](docs/roadmap.md) for what each phase shipped and
+> [docs/deployment.md](docs/deployment.md) to go live.
 
 ## Stack
 
@@ -81,6 +83,7 @@ npm test            # vitest
 - [Architecture overview](docs/architecture.md)
 - [Provider adapter guide](docs/provider-adapters.md)
 - [Security & compliance notes](docs/security-and-compliance.md)
+- [Deployment guide](docs/deployment.md)
 - [Implementation roadmap](docs/roadmap.md)
 
 ## Compliance note

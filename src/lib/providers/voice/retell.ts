@@ -1,4 +1,5 @@
 import "server-only";
+import { compileReceptionistScript } from "@/lib/receptionist-script";
 import type { VoiceProvider, VoiceAgentConfig, VoiceAgentRef, TestCallResult } from "./types";
 
 const API_BASE = "https://api.retellai.com";
@@ -25,22 +26,20 @@ export class RetellVoiceProvider implements VoiceProvider {
   }
 
   buildPrompt(config: VoiceAgentConfig): string {
-    const sections = [
-      `You are ${config.receptionistName}, an AI receptionist. Greet every caller with exactly: "${config.greeting}"`,
-      config.complianceStatements.length
-        ? `Required statements you must deliver when relevant:\n${config.complianceStatements.map((s) => `- ${s}`).join("\n")}`
-        : null,
-      `Answer questions ONLY from this approved knowledge. If the answer is not here, say you will have a team member follow up — never invent information.`,
-      config.faqs.map((f) => `Q: ${f.question}\nA: ${f.answer}`).join("\n\n") || "(no FAQs configured)",
-      config.businessKnowledge ? `Background knowledge:\n${config.businessKnowledge}` : null,
-      config.qualificationPrompts.length
-        ? `When the caller is a potential customer, ask these in order:\n${config.qualificationPrompts.map((q, i) => `${i + 1}. ${q}`).join("\n")}`
-        : null,
-      config.restrictedTopics.length
-        ? `Never discuss: ${config.restrictedTopics.join(", ")}.`
-        : null,
-    ];
-    return sections.filter(Boolean).join("\n\n");
+    return compileReceptionistScript({
+      receptionistName: config.receptionistName,
+      greeting: config.greeting,
+      tone: "professional",
+      faqs: config.faqs,
+      qualificationPrompts: config.qualificationPrompts,
+      businessKnowledge: config.businessKnowledge,
+      restrictedTopics: config.restrictedTopics,
+      complianceStatements: config.complianceStatements,
+      transferRules: null,
+      emergencyLanguage: null,
+    })
+      .map((s) => `## ${s.heading}\n${s.body}`)
+      .join("\n\n");
   }
 
   async syncAgent(config: VoiceAgentConfig, existingAgentId?: string): Promise<VoiceAgentRef> {

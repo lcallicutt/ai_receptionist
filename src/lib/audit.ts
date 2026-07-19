@@ -13,6 +13,7 @@ export async function writeAuditLog(entry: {
   entityType?: string;
   entityId?: string;
   detail?: Record<string, unknown>;
+  impersonatedByUserId?: string;
 }): Promise<void> {
   try {
     const db = await getDb();
@@ -20,6 +21,7 @@ export async function writeAuditLog(entry: {
       id: newId("audit"),
       organizationId: entry.organizationId,
       actorUserId: entry.actorUserId,
+      impersonatedByUserId: entry.impersonatedByUserId ?? null,
       action: entry.action,
       entityType: entry.entityType ?? null,
       entityId: entry.entityId ?? null,
