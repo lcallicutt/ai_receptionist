@@ -97,10 +97,18 @@ real replies create or refresh a lead as follow_up_required. Configurable
 template + cooldown on the Settings page; SMS Activity page shows the full
 conversation stream with delivery status and opt-out badges.
 
-## Phase 8 — Analytics & Usage
+## ✅ Phase 8 — Analytics & Usage (complete)
 
-Dashboard metrics and charts, reports, usage tracking against plan allowances,
-server-enforced plan limits at feature boundaries, admin monitoring.
+Analytics page with date-range filters and fourteen headline metrics
+(answer/missed/FAQ-resolution/booking-conversion/lead-conversion rates, avg
+duration, text-backs, CRM success, opportunities recovered) plus accessible
+server-rendered charts — calls over time, call outcomes, conversion funnel,
+lead quality, missed-call recovery — each with a table view. Charts follow
+the dataviz method (single-hue magnitude marks, identity in labels, ink-token
+text, validated contrast). Usage page with allowance meters, over-allowance
+highlighting, and overage estimates from configurable per-unit rates
+(`OVERAGE_RATES_CENTS`); admin usage page showing per-organization voice/SMS
+consumption against plan allowances with estimated overage.
 
 ## Phase 9 — Billing & Production Hardening
 
@@ -110,6 +118,6 @@ test coverage, deployment documentation.
 
 ## Next recommended task
 
-**Phase 8 — Analytics & Usage**: dashboard metrics and charts, usage
-tracking against plan allowances (voice-minute records are already being
-written by ingestion), and admin monitoring.
+**Phase 9 — Billing & Production Hardening**: Stripe preparation (billing
+status fields already exist), billing/compliance portal pages, expanded
+security review, accessibility pass, and deployment documentation.
