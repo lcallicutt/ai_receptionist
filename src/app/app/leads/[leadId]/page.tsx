@@ -7,6 +7,7 @@ import { requireOrgContext } from "@/lib/auth/guards";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge, statusVariant } from "@/components/ui/badge";
 import { LeadControls } from "@/components/features/lead-controls";
+import { ResyncCrmButton } from "@/components/features/resync-crm-button";
 import { formatDuration, formatPhone } from "@/lib/utils";
 
 export const metadata = { title: "Lead Detail" };
@@ -103,10 +104,11 @@ export default async function LeadDetailPage({
                 </div>
                 <div>
                   <dt className="text-xs font-medium uppercase tracking-wide text-ink-300">CRM sync</dt>
-                  <dd>
+                  <dd className="flex flex-wrap items-center gap-2">
                     <Badge variant={statusVariant(lead.crmSyncStatus)}>{lead.crmSyncStatus}</Badge>
+                    <ResyncCrmButton leadId={lead.id} />
                     {lead.crmSyncError ? (
-                      <span className="ml-2 text-xs text-red-700">{lead.crmSyncError}</span>
+                      <span className="text-xs text-red-700">{lead.crmSyncError}</span>
                     ) : null}
                   </dd>
                 </div>

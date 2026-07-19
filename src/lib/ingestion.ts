@@ -4,6 +4,8 @@ import { z } from "zod";
 import { getDb, schema } from "@/lib/db";
 import { newId } from "@/lib/ids";
 import { computeLeadScore, classifyScore } from "@/lib/lead-scoring";
+import { syncLeadToCrm } from "@/lib/crm-sync";
+import { emitAutomationEvent, isAutomationConfigured } from "@/lib/providers/automation/n8n";
 
 /**
  * Provider-neutral incoming call event. Voice providers (Retell, Vapi, Bland)
@@ -243,6 +245,50 @@ export async function ingestCallEvent(organizationId: string, event: CallEvent):
       eventType,
       occurredAt: new Date(event.startedAt.getTime() + i * 3000),
     });
+  }
+
+  // Downstream integrations — best-effort, never fatal to ingestion.
+  if (leadId) {
+    try {
+      await syncLeadToCrm(organizationId, leadId);
+    } catch (err) {
+      console.error("crm sync during ingestion failed", err);
+    }
+  }
+  if (isAutomationConfigured()) {
+    try {
+      await emitAutomationEvent(
+        event.status === "missed" || event.status === "abandoned" ? "call.missed" : "call.completed",
+        organizationId,
+        {
+          callRecordId,
+          leadId,
+          fromNumber: event.fromNumber,
+          outcome: event.outcome ?? null,
+          durationSeconds: event.durationSeconds,
+        },
+      );
+      await db.insert(schema.integrationLogs).values({
+        id: newId("il"),
+        organizationId,
+        providerType: "automation_webhook",
+        provider: "n8n",
+        operation: "emit_event",
+        relatedCallId: callRecordId,
+        success: true,
+      });
+    } catch (err) {
+      await db.insert(schema.integrationLogs).values({
+        id: newId("il"),
+        organizationId,
+        providerType: "automation_webhook",
+        provider: "n8n",
+        operation: "emit_event",
+        relatedCallId: callRecordId,
+        success: false,
+        detail: { message: err instanceof Error ? err.message : "unknown" },
+      });
+    }
   }
 
   return { callRecordId, leadId, callerId };

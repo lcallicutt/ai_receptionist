@@ -70,11 +70,19 @@ test-call flow (agent sync + outbound dial) with honest not-configured
 states. Admin Provider Health (deployment config, tenant connections,
 integration activity) and Webhook Logs pages.
 
-## Phase 6 — CRM & Automation
+## ✅ Phase 6 — CRM & Automation (complete)
 
-`CRMProvider` interface, GoHighLevel integration, generic CRM webhooks, n8n
-integration, retry management for failed syncs, integration logs + admin
-failed-workflow tooling.
+`CRMProvider` interface with GoHighLevel (contact upsert + activity notes +
+tags, per-tenant encrypted API keys validated before storage) and generic
+webhook (signed with X-FlowNet-Signature HMAC-SHA256, test delivery before
+save) implementations. n8n automation events (call.completed, call.missed,
+lead.created, appointment.booked) with optional signing. CRM sync service
+wired into ingestion — every captured lead syncs automatically, updates
+sync status/record id/error on the lead, and writes integration logs.
+Retry paths: per-lead "Resync to CRM" in the client portal and
+platform-admin retry on the real Failed Workflows page (failed syncs,
+failed webhook events, failed integration operations). CRM Connections
+page with connect/disconnect and live sync counts.
 
 ## Phase 7 — Missed-Call Text-Back
 
@@ -94,6 +102,7 @@ test coverage, deployment documentation.
 
 ## Next recommended task
 
-**Phase 6 — CRM & Automation**: `CRMProvider` interface with GoHighLevel
-and generic-webhook implementations, n8n integration, retry management for
-failed syncs, and the admin failed-workflows tooling with manual retry.
+**Phase 7 — Missed-Call Text-Back**: missed-call detection is already
+ingesting (Twilio status webhook); build the text-back sender through the
+`SMSProvider`, STOP/opt-out handling on the inbound SMS webhook, cooldown
+protection, and two-way conversation tracking into leads.
